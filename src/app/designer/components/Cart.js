@@ -1,0 +1,610 @@
+import axios from "axios";
+import {
+  Check,
+  CreditCard,
+  Tag
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Input } from "../../../components/ui/input";
+
+// Importing sub-components
+import AddressForm from "./AddressForm";
+import CartItem from "./CartItem";
+import EmptyCart from "./EmptyCart";
+import OrderConfirmation from "./OrderConfirmation";
+
+const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
+  const [shippingRates, setShippingRates] = useState([]);
+  const [selectedShipping, setSelectedShipping] = useState(null);
+  const [isLoadingRates, setIsLoadingRates] = useState(false);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [orderInfo, setOrderInfo] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [selectedVariants, setSelectedVariants] = useState({});
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [lastFocusedInput, setLastFocusedInput] = useState(null);
+  const inputRefs = useRef({});
+
+  // Coupon state
+  const [couponCode, setCouponCode] = useState("");
+  const [couponInfo, setCouponInfo] = useState(null);
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+  const [couponError, setCouponError] = useState("");
+
+  // Address form state
+  const [addressForm, setAddressForm] = useState({
+    name: "",
+    email: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state_code: "",
+    country_code: "US",
+    zip: "",
+    phone: "",
+  });
+
+  // Handle variant change
+  const handleVariantChange = (
+    itemIndex,
+    productId,
+    variantId,
+    variantData
+  ) => {
+    // Update the cart item with new variant info
+    const updatedCart = [...cart];
+    updatedCart[itemIndex] = {
+      ...updatedCart[itemIndex],
+      variant_id: variantId,
+      price: variantData.price,
+      size: variantData.size,
+    };
+    setCart(updatedCart);
+
+    // Store selected variant
+    setSelectedVariants({
+      ...selectedVariants,
+      [productId]: variantId,
+    });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setAddressForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Effect to restore focus after re-render
+  useEffect(() => {
+    if (lastFocusedInput && inputRefs.current[lastFocusedInput]) {
+      // Use setTimeout to ensure the focus happens after the re-render
+      setTimeout(() => {
+        const input = inputRefs.current[lastFocusedInput];
+        if (input) {
+          input.focus();
+
+          // If it's a text input (specifically type="text"), place cursor at the end
+          // Email, number, and other input types don't support setSelectionRange
+          if (
+            input.type === "text" &&
+            typeof input.setSelectionRange === "function"
+          ) {
+            const length = input.value.length;
+            input.setSelectionRange(length, length);
+          }
+        }
+      }, 0);
+    }
+  }, [addressForm, lastFocusedInput]);
+
+  // Set up ref for input elements
+  const setInputRef = (name, element) => {
+    inputRefs.current[name] = element;
+  };
+
+  // Validate coupon code
+  const validateCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponError("Please enter a coupon code");
+      return;
+    }
+
+    setIsValidatingCoupon(true);
+    setCouponError("");
+
+    try {
+      // Calculate the current cart total
+      const cartTotal = subtotal;
+
+      // Get product IDs from cart items
+      const productIds = cart.map((item) => item.product_id || "");
+
+      const response = await axios.post(
+        `/api/coupons/validate/${couponCode}`,
+        {
+          cartTotal: cartTotal,
+          productIds: productIds,
+        }
+      );
+
+      if (response.data.valid) {
+        // Extract discount info from the response structure
+        const couponData = response.data.coupon;
+
+        setCouponInfo({
+          code: couponData.code,
+          type: couponData.type, // "percentage"
+          value: couponData.value, // 10
+          maxDiscount: couponData.maxDiscount, // 10
+          valid: true,
+        });
+        setCouponError("");
+      } else {
+        setCouponInfo(null);
+        setCouponError(response.data.message || "Invalid coupon code");
+      }
+    } catch (error) {
+      setCouponInfo(null);
+      setCouponError(
+        error.response?.data?.message || "Error validating coupon"
+      );
+    } finally {
+      setIsValidatingCoupon(false);
+    }
+  };
+
+  // Remove applied coupon
+  const removeCoupon = () => {
+    setCouponCode("");
+    setCouponInfo(null);
+    setCouponError("");
+  };
+
+  // Fetch shipping rates
+  const fetchShippingRates = async () => {
+    if (!validateAddressForm()) {
+      setErrorMessage("Please fill out all required address fields");
+      return;
+    }
+
+    setIsLoadingRates(true);
+    setErrorMessage("");
+
+    try {
+      // Prepare items for shipping rate request
+      const items = cart.map((item) => ({
+        variant_id: item.variant_id,
+        quantity: 1,
+      }));
+
+      // Prepare recipient data
+      const recipient = {
+        name: addressForm.name,
+        address1: addressForm.address1,
+        address2: addressForm.address2,
+        city: addressForm.city,
+        state_code: addressForm.state_code,
+        country_code: addressForm.country_code,
+        zip: addressForm.zip,
+      };
+
+      // Call your API to get shipping rates
+      const response = await axios.post(
+        "https://artqr-backend.vercel.app/uploadImage/shipping/rates",
+        {
+          recipient,
+          items,
+        }
+      );
+
+      if (response.data.success) {
+        // Filter to only show carbon offset shipping rate
+        const carbonOffsetRate = response.data.rates.find(
+          (rate) => rate.id === "STANDARD_CARBON_OFFSET"
+        );
+        setShippingRates(carbonOffsetRate ? [carbonOffsetRate] : []);
+        if (carbonOffsetRate) {
+          setSelectedShipping(carbonOffsetRate.id);
+        }
+      } else {
+        setErrorMessage("Failed to get shipping rates: " + response.data.error);
+      }
+    } catch (error) {
+      setErrorMessage(
+        "Error fetching shipping rates: " +
+          (error.response?.data?.error || error.message)
+      );
+    } finally {
+      setIsLoadingRates(false);
+    }
+  };
+
+  // Validate address form
+  const validateAddressForm = () => {
+    const requiredFields = [
+      "name",
+      "email",
+      "address1",
+      "city",
+      "state_code",
+      "zip",
+      "phone",
+    ];
+    return requiredFields.every((field) => addressForm[field]?.trim());
+  };
+
+  const placeOrder = async () => {
+    if (!selectedShipping) {
+      setErrorMessage("Please select a shipping method");
+      return;
+    }
+
+    setIsPlacingOrder(true);
+    setErrorMessage("");
+
+    try {
+      // Prepare items for Stripe checkout
+      const lineItems = cart.map((item) => ({
+        variant_id: parseInt(item.variant_id),
+        quantity: 1,
+        price: item.price,
+        name: item.name,
+        image: item.image,
+        designUrl: item.designUrl || "",
+        designText: item.designText || "",
+        size: item.size || "",
+      }));
+
+      // Prepare customer data
+      const customer = {
+        name: addressForm.name,
+        email: addressForm.email,
+        address: {
+          line1: addressForm.address1,
+          line2: addressForm.address2 || "",
+          city: addressForm.city,
+          state: addressForm.state_code,
+          country: addressForm.country_code,
+          postal_code: addressForm.zip,
+        },
+        phone: addressForm.phone,
+      };
+
+      // Get shipping rate details
+      const selectedRate = shippingRates.find(
+        (rate) => rate.id === selectedShipping
+      );
+
+      // Call Stripe checkout endpoint - sending the calculated total amount!
+      const response = await axios.post(
+        "https://artqr-backend.vercel.app/stripe/create-checkout-session",
+        {
+          customer,
+          items: lineItems,
+          shipping: {
+            id: selectedShipping,
+            name: selectedRate?.name || "Carbon Neutral Shipping",
+            rate: 0, // Set shipping rate to 0 in the API call
+          },
+          total: total, // Pass the calculated total which includes any discounts
+        }
+      );
+
+      if (response.data.url) {
+        // Save order to database before redirecting
+        try {
+          const orderData = {
+            customer: {
+              name: addressForm.name,
+              email: addressForm.email,
+              phone: addressForm.phone,
+              address: {
+                line1: addressForm.address1,
+                line2: addressForm.address2 || "",
+                city: addressForm.city,
+                state: addressForm.state_code,
+                country: addressForm.country_code,
+                postal_code: addressForm.zip,
+              },
+            },
+            items: lineItems,
+            shipping: {
+              id: selectedShipping,
+              name: selectedRate?.name || "Carbon Neutral Shipping",
+              rate: 0,
+            },
+            subtotal: subtotal,
+            discount: discount,
+            total: total,
+            couponCode: couponInfo?.code || null,
+            status: "pending",
+            stripeSessionId: response.data.sessionId || null,
+          };
+
+          await axios.post("/api/orders", orderData);
+        } catch (orderError) {
+          console.error("Failed to save order:", orderError);
+          // Continue with redirect even if order save fails
+        }
+
+        // Redirect to Stripe Checkout
+        window.location.href = response.data.url;
+      } else {
+        setErrorMessage("Failed to create checkout session");
+      }
+    } catch (error) {
+      setErrorMessage(
+        "Error creating checkout session: " +
+          (error.response?.data?.error || error.message)
+      );
+    } finally {
+      setIsPlacingOrder(false);
+    }
+  };
+
+  const subtotal = cart.reduce((total, item) => total + item.price, 0);
+  const shippingCost = selectedShipping
+    ? parseFloat(
+        shippingRates.find((rate) => rate.id === selectedShipping)?.rate
+      ) || 4.78
+    : 4.78; // Default to carbon offset shipping cost of 4.78
+
+  // Calculate discount amount with max discount consideration
+  const discount = couponInfo
+    ? couponInfo.type === "percentage"
+      ? Math.min(
+          (subtotal * (couponInfo.value || 0)) / 100,
+          couponInfo.maxDiscount || Infinity
+        ) // Apply percentage with maximum cap
+      : Math.min(couponInfo.value || 0, subtotal) // Fixed amount discount, capped at subtotal
+    : 0;
+
+  // Calculate discounted subtotal (which is also the final total since shipping is free)
+  const discountedSubtotal = subtotal - discount;
+  const total = discountedSubtotal; // Final total without shipping
+
+  // Render coupon form
+  const renderCouponForm = () => {
+    return (
+      <div className="mt-6 mb-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+        <h3 className="text-md font-medium text-gray-800 dark:text-gray-200 mb-3">
+          Apply Coupon
+        </h3>
+
+        {couponInfo ? (
+          <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg mb-4">
+            <div className="flex items-center">
+              <Tag size={18} className="text-green-500 mr-2" />
+              <div>
+                <p className="font-medium text-green-600 dark:text-green-400">
+                  {couponInfo.code}
+                </p>
+                <p className="text-sm text-green-600 dark:text-green-400">
+                  {couponInfo.type === "percentage"
+                    ? `${couponInfo.value || 0}% off`
+                    : `$${(couponInfo.value || 0).toFixed(2)} off`}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={removeCoupon}
+              className="text-sm text-red-500 hover:text-red-600"
+            >
+              Remove
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center space-x-2">
+            <div className="flex-1">
+              <Input
+                type="text"
+                placeholder="Enter coupon code"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                className="w-full"
+              />
+            </div>
+
+            <button
+              onClick={validateCoupon}
+              disabled={isValidatingCoupon || !couponCode.trim()}
+              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200 flex items-center"
+            >
+              {isValidatingCoupon ? "Validating..." : "Apply"}
+            </button>
+          </div>
+        )}
+
+        {couponError && (
+          <div className="mt-2 text-sm text-red-600 dark:text-red-400">
+            {couponError}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Render shipping information section
+  const renderShippingInfo = () => {
+    if (shippingRates.length > 0) {
+      const rate = shippingRates[0]; // Get the carbon offset shipping rate
+
+      return (
+        <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-start">
+            <div className="flex-shrink-0 mt-1">
+              <Check size={18} className="text-green-500" />
+            </div>
+            <div className="ml-3">
+              <h3 className="text-md font-medium text-gray-800 dark:text-gray-200">
+                Carbon Neutral Shipping
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                {rate.name}
+              </p>
+              <p className="text-sm font-medium text-gray-800 dark:text-gray-200 mt-1">
+                <span className="line-through text-gray-400">${rate.rate}</span>
+                <span className="text-green-500 ml-2 font-medium">FREE!</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Cart content rendering
+  // Update this section in the Cart component
+
+  const renderCartContent = () => {
+    if (cart.length === 0) {
+      return <EmptyCart setActiveTab={setActiveTab} />;
+    }
+
+    // Create a Set to track the bundle IDs we've already rendered
+    const renderedBundles = new Set();
+
+    // Extract the unique bundles to process
+    const uniqueBundleItems = cart.filter((item, index) => {
+      // If not part of a bundle, include it
+      if (!item.bundle_id) return true;
+
+      // If we haven't seen this bundle before, include it and mark as seen
+      if (!renderedBundles.has(item.bundle_id)) {
+        renderedBundles.add(item.bundle_id);
+        return true;
+      }
+
+      // Skip items from bundles we've already processed
+      return false;
+    });
+
+    return (
+      <div>
+        <div className="divide-y divide-gray-200 dark:divide-gray-700">
+          {cart.map((item, index) => (
+            <CartItem
+              key={index}
+              item={item}
+              index={index}
+              selectedVariants={selectedVariants}
+              handleVariantChange={handleVariantChange}
+              cart={cart}
+              removeItem={() => {
+                // If this is part of a bundle, remove all items with the same bundle_id
+                if (item.bundle_id) {
+                  setCart(
+                    cart.filter(
+                      (cartItem) => cartItem.bundle_id !== item.bundle_id
+                    )
+                  );
+                } else {
+                  // Otherwise just remove this single item
+                  setCart(cart.filter((_, i) => i !== index));
+                }
+              }}
+            />
+          ))}
+        </div>
+
+        {renderCouponForm()}
+
+        <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+          <div className="flex justify-between mb-2">
+            <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
+            <span className="font-medium text-gray-800 dark:text-gray-200">
+              ${subtotal.toFixed(2)}
+            </span>
+          </div>
+
+          {discount > 0 && (
+            <div className="flex justify-between mb-2 text-green-600 dark:text-green-400">
+              <span>Discount</span>
+              <span>-${discount.toFixed(2)}</span>
+            </div>
+          )}
+
+          <div className="flex justify-between mb-4">
+            <span className="text-gray-600 dark:text-gray-400">Shipping</span>
+            <span className="font-medium text-gray-800 dark:text-gray-200">
+              <span className="line-through text-gray-400">
+                ${shippingCost.toFixed(2)}
+              </span>
+              <span className="text-green-500 ml-2 font-medium">FREE!</span>
+            </span>
+          </div>
+          <div className="flex justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+            <span className="text-lg font-medium text-gray-800 dark:text-gray-200">
+              Total
+            </span>
+            <span className="text-lg font-medium text-gray-800 dark:text-gray-200">
+              ${total.toFixed(2)}
+            </span>
+          </div>
+
+          {!showAddressForm ? (
+            <button
+              onClick={() => setShowAddressForm(true)}
+              className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors duration-200"
+            >
+              Proceed to Checkout
+            </button>
+          ) : shippingRates.length > 0 ? (
+            <button
+              onClick={placeOrder}
+              disabled={isPlacingOrder}
+              className="w-full py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200 flex items-center justify-center"
+            >
+              <CreditCard size={18} className="mr-2" />
+              {isPlacingOrder ? "Processing..." : "Proceed to Payment"}
+            </button>
+          ) : null}
+
+          {errorMessage && (
+            <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
+              {errorMessage}
+            </div>
+          )}
+        </div>
+
+        {showAddressForm && (
+          <AddressForm
+            addressForm={addressForm}
+            handleInputChange={handleInputChange}
+            setLastFocusedInput={setLastFocusedInput}
+            setInputRef={setInputRef}
+            fetchShippingRates={fetchShippingRates}
+            isLoadingRates={isLoadingRates}
+          />
+        )}
+
+        {/* Show Carbon Offset shipping information with FREE indicator */}
+        {shippingRates.length > 0 && renderShippingInfo()}
+      </div>
+    );
+  };
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <h2 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-6">
+        Shopping Cart
+      </h2>
+
+      {orderPlaced ? (
+        <OrderConfirmation
+          orderInfo={orderInfo}
+          setActiveTab={setActiveTab}
+          setCart={setCart}
+          setOrderPlaced={setOrderPlaced}
+        />
+      ) : (
+        renderCartContent()
+      )}
+    </div>
+  );
+};
+
+export default Cart;
