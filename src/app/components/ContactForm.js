@@ -78,7 +78,7 @@ export default function ContactSection() {
               Got questions?
             </span>{" "}
             <span className="text-gray-600 dark:text-gray-300">
-              We're <br className="hidden sm:block"/> always here to help
+              We're <br className="hidden sm:block" /> always here to help
             </span>
           </h2>
 
@@ -197,7 +197,7 @@ export default function ContactSection() {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Yuvraj Singh"
+                    placeholder="Write your name"
                     required
                     className="
                       w-full px-4 py-3 rounded-xl
@@ -221,7 +221,7 @@ export default function ContactSection() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="yuvrajsingh200203@mail.com"
+                    placeholder="xyz@mail.com"
                     required
                     className="
                       w-full px-4 py-3 rounded-xl
@@ -262,11 +262,10 @@ export default function ContactSection() {
                 {/* Status Message */}
                 {submitStatus && (
                   <div
-                    className={`p-3 rounded-lg text-sm ${
-                      submitStatus.type === "success"
-                        ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300"
-                        : "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300"
-                    }`}
+                    className={`p-3 rounded-lg text-sm ${submitStatus.type === "success"
+                      ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300"
+                      : "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300"
+                      }`}
                   >
                     {submitStatus.message}
                   </div>
