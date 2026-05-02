@@ -358,6 +358,52 @@ const projectCatalog = {
     primaryCta: 'View Live Store',
     primaryLink: 'https://flamingo-9981.myshopify.com/',
   },
+
+  // 🌿 HIMALAYAN E-COMMERCE
+  'himalayan-ecommerce-platform': {
+    title: 'Himalayan Products – Authentic E-Commerce Platform',
+    description:
+      'We developed a scalable e-commerce platform focused on delivering authentic Himalayan products to customers across India. The platform bridges the gap between local Himalayan producers and modern consumers by offering a seamless digital marketplace for natural, organic, and handcrafted goods. This project was built with the vision of promoting sustainable living while supporting local communities and preserving traditional practices.',
+
+    heroImage: '/images/himalaya.png', // User will provide actual image later
+    heroBg: '#F0FDF4',
+    imageFit: 'cover',
+
+    challenge: {
+      title: 'Challenge',
+      description:
+        'Designing An E-Commerce Platform That Ensures Authenticity Of Products While Providing A Smooth And Trustworthy Shopping Experience For Users Across India.',
+      points: [
+        'Ensuring Authentic Sourcing And Quality Assurance Of Himalayan Products',
+        'Building Trust And Transparency For Online Purchases',
+        'Managing A Diverse Product Catalog With Easy Navigation',
+        'Creating A Scalable Platform To Handle Growing Users And Orders',
+        'Providing A Seamless User Experience Across Devices',
+      ],
+    },
+
+    solution: {
+      title: 'Solution Provided By SUH Tech',
+      description:
+        'The Company Developed A User-Centric And Scalable E-Commerce Platform That Focuses On Authenticity, Usability, And Performance.',
+      points: [
+        'Designing A Clean And Structured Product Catalog With Smart Categorization',
+        'Showcasing Product Authenticity Through Detailed Descriptions And Source Information',
+        'Implementing Secure And Smooth Checkout And Payment Systems',
+        'Optimizing Performance For Fast Browsing And Mobile Responsiveness',
+        'Creating An Intuitive Interface For Easy Navigation And Shopping',
+      ],
+    },
+
+    impact: [
+      { value: '35%', description: 'Increase In Online Sales Of Himalayan Products' },
+      { value: '30%', description: 'Growth In Customer Engagement And Repeat Purchases' },
+      { value: '25%', description: 'Improvement In User Trust Through Authentic Product Listings' },
+      { value: '40%', description: 'Better Reach For Local Himalayan Producers' },
+    ],
+    primaryCta: 'View Live Website',
+    primaryLink: 'https://ecommer-store-puce.vercel.app/',
+  },
 };
 
 async function PortfolioDetailPage({ params }) {
@@ -429,7 +475,7 @@ async function PortfolioDetailPage({ params }) {
                   src={data.heroImage}
                   alt={data.title}
                   fill
-                  className='object-contain'
+                  className={data.imageFit === 'cover' ? 'object-cover' : 'object-contain'}
                   sizes='600px'
                   priority
                 />
