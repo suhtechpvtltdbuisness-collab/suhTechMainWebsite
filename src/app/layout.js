@@ -1,25 +1,6 @@
 import { ThemeProvider } from "@/components/theme-provider";
-import { Geist_Mono, Inter, Poppins } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins",
-  display: "swap",
-});
 
 export const metadata = {
   metadataBase: new URL('https://www.suhtech.top'),
@@ -305,7 +286,6 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistMono.variable} ${inter.variable} ${poppins.variable}`}
     >
       <head>
 
@@ -319,9 +299,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceStructuredData) }}
         />
       </head>
-      <body
-        className={`${geistMono.variable} ${inter.variable} ${poppins.variable}`}
-      >
+      <body className="antialiased">
         <Script
           id="contentsquare"
           strategy="afterInteractive"

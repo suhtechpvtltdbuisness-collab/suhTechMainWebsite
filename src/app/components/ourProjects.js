@@ -59,6 +59,13 @@ const ourProjects = [
     image: '/images/bkbs.png',
     slug: 'bkbs-trust',
   },
+  {
+    title: 'Himalayan Products – Authentic E-Commerce Platform',
+    subtitle:
+      'A seamless digital marketplace for natural, organic, and handcrafted Himalayan goods.',
+    image: '/images/himalaya.png',
+    slug: 'himalayan-ecommerce-platform',
+  },
 ];
 
 const ScrollingMockup = ({ image, title }) => {
