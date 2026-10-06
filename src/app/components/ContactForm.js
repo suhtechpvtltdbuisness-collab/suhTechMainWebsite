@@ -5,6 +5,37 @@ import { motion } from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { useState } from "react";
 
+const officeLocations = [
+  {
+    region: "India",
+    title: "Growth & Innovation Hub",
+    address: [
+      "Tower A, Global Technology Park",
+      "Marathahalli Outer Ring Road, Varthur Hobli",
+      "Bengaluru, Karnataka, India",
+    ],
+  },
+  {
+    region: "Singapore",
+    title: "Global Business & Innovation Centre",
+    company: "SUH TECH Private Limited",
+    address: [
+      "10 Pasir Panjang Road",
+      "#13-011, Mapletree Business City",
+      "Singapore 117438",
+    ],
+  },
+  {
+    region: "Australia",
+    title: "Overseas Delivery & Outsourcing Centre",
+    address: [
+      "Level 9, Suite 9.01",
+      "580 George Street",
+      "Sydney, NSW 2000, Australia",
+    ],
+  },
+];
+
 export default function ContactSection() {
   const [formData, setFormData] = useState({
     name: "",
@@ -139,24 +170,54 @@ export default function ContactSection() {
               </div>
             </div>
 
-            {/* Location */}
+            {/* Locations */}
             <div className="flex items-start gap-4 lg:gap-6">
               <div
                 className="
-                  w-10 h-10 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center
+                  w-10 h-10 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center shrink-0
                   bg-cyan-500/15 text-cyan-600
                   dark:bg-cyan-500/20 dark:text-cyan-300
                 "
               >
                 <MapPin size={20} className="lg:w-[22px] lg:h-[22px]" />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <h4 className="text-gray-900 dark:text-white font-semibold text-base lg:text-lg">
-                  Head Quarter
+                  Office Locations
                 </h4>
-                <p className="text-gray-600 dark:text-gray-400 text-sm lg:text-base">
-                  Ithums Galleria Alpha 2 Floor 8th-40 201310
-                </p>
+                <div className="mt-4 grid gap-3">
+                  {officeLocations.map((office) => (
+                    <address
+                      key={office.region}
+                      className="
+                        not-italic rounded-2xl border border-white/60 bg-white/55 p-4
+                        shadow-sm backdrop-blur-sm
+                        dark:border-white/10 dark:bg-white/[0.04]
+                      "
+                    >
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="rounded-full bg-cyan-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700 dark:bg-cyan-400/10 dark:text-cyan-200">
+                          {office.region}
+                        </span>
+                        <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                          {office.title}
+                        </span>
+                      </div>
+                      {office.company && (
+                        <p className="mt-3 text-sm font-medium text-gray-800 dark:text-gray-200">
+                          {office.company}
+                        </p>
+                      )}
+                      <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-400">
+                        {office.address.map((line) => (
+                          <span key={line} className="block">
+                            {line}
+                          </span>
+                        ))}
+                      </p>
+                    </address>
+                  ))}
+                </div>
               </div>
             </div>
           </motion.div>

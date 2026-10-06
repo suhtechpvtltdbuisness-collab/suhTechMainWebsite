@@ -198,10 +198,9 @@ export default function RootLayout({ children }) {
     "description": "Leading IT service provider specializing in web application development and DevOps solutions",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Ithums Galleria Alpha 2 Floor 8th-40",
-      "addressLocality": "Noida",
-      "addressRegion": "Delhi NCR",
-      "postalCode": "201310",
+      "streetAddress": "Tower A, Global Technology Park, Marathahalli Outer Ring Road, Varthur Hobli",
+      "addressLocality": "Bengaluru",
+      "addressRegion": "Karnataka",
       "addressCountry": "IN"
     },
     "areaServed": [

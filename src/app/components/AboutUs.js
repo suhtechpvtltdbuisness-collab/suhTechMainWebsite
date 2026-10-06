@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-const heroImagePath = "/download (2) 1.svg";
+const heroImagePath = "/about-hero.svg";
 
 export default function AboutSection() {
   const router = useRouter();
