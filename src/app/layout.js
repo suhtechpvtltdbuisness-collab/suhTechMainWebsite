@@ -231,7 +231,7 @@ export default function RootLayout({ children }) {
     ],
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+91-8298252909",
+      "telephone": "+91-8178939033",
       "contactType": "Customer Service",
       "email": "info@suhtech.top"
     },

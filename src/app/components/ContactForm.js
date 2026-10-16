@@ -142,7 +142,7 @@ export default function ContactSection() {
                 <h4 className="text-gray-900 dark:text-white font-semibold text-base lg:text-lg">
                   Phone Number
                 </h4>
-                <p className="text-gray-600 dark:text-gray-400 text-sm lg:text-base">8298252909</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm lg:text-base">8178939033</p>
               </div>
             </div>
 
