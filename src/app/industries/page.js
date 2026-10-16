@@ -4,6 +4,7 @@ import IndustriesSection from "../components/IndustriesSection";
 // import CoreValue from "../../app/components/CoreValues"
 // import OurTeam from "../../app/components/OurTeam"
 import FoundersVision from "../components/Founder-vision";
+import AboutSuhTech from "../components/AboutSuhTech";
 export const metadata = {
   title: "Industries We Serve - Web Development & DevOps Solutions | SUH Tech",
   description:
@@ -36,6 +37,7 @@ export default function IndustriesPage() {
       <div className="mt-16 md:mt-20 lg:mt-24">
               <FoundersVision />
       </div>
+      <AboutSuhTech />
       {/* <div className="mt-16 md:mt-20 lg:mt-24">
         <CoreValue />
       </div> */}

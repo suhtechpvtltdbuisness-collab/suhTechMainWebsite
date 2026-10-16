@@ -57,7 +57,7 @@ const projectCatalog = {
     ],
 
     primaryCta: 'View Live Demo',
-    primaryLink: '/coming-soon',
+    primaryLink: 'https://www.orga.cc/',
   },
 
   // 🟡 VIRAJ
@@ -310,7 +310,7 @@ const projectCatalog = {
     ],
 
     primaryCta: 'View Live Website',
-    primaryLink: 'https://bkbsewatrust.in/',
+    primaryLink: 'https://www.bkbsewatrust.com/',
   },
 
   // SHOPIFY
