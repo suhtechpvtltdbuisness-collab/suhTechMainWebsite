@@ -8,6 +8,15 @@ import { useState } from "react";
 const officeLocations = [
   {
     region: "India",
+    title: "Greater Noida Office",
+    company: "SUH TECH Private Limited",
+    address: [
+      "8th Floor, Alpha-2, ITHUMS Galleria, Unit No-40",
+      "Greater Noida, Uttar Pradesh 201310, India",
+    ],
+  },
+  {
+    region: "India",
     title: "Growth & Innovation Hub",
     address: [
       "Tower A, Global Technology Park",
