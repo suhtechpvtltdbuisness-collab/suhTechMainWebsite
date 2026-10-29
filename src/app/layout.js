@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import Script from "next/script";
+import MetaPixel from "@/components/MetaPixel";
 import "./globals.css";
 
 export const metadata = {
@@ -304,6 +305,8 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
           src="https://t.contentsquare.net/uxa/316925807530f.js"
         />
+
+        <MetaPixel />
 
         <ThemeProvider
           attribute="class"

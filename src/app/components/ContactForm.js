@@ -197,7 +197,7 @@ export default function ContactSection() {
                 <div className="mt-4 grid gap-3">
                   {officeLocations.map((office) => (
                     <address
-                      key={office.region}
+                      key={office.title}
                       className="
                         not-italic rounded-2xl border border-white/60 bg-white/55 p-4
                         shadow-sm backdrop-blur-sm
