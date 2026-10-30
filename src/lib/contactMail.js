@@ -1,8 +1,5 @@
 import nodemailer from "nodemailer";
-
-function smtpConfigured() {
-  return Boolean(process.env.SMTP_USER?.trim() && process.env.SMTP_PASS?.trim());
-}
+import { getContactConfig } from "./contactConfig";
 
 function escapeHtml(value) {
   return String(value)
@@ -13,24 +10,23 @@ function escapeHtml(value) {
 }
 
 export async function sendContactEmail({ name, email, message }) {
-  if (!smtpConfigured()) {
+  const { smtpUser, smtpPass, contactReceiver } = getContactConfig();
+
+  if (!smtpUser || !smtpPass) {
     throw new Error("SMTP is not configured");
   }
-
-  const user = process.env.SMTP_USER.trim();
-  const to = process.env.CONTACT_RECEIVER_EMAIL?.trim() || user;
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user,
-      pass: process.env.SMTP_PASS.trim(),
+      user: smtpUser,
+      pass: smtpPass,
     },
   });
 
   await transporter.sendMail({
-    from: `"SUH Tech Website" <${user}>`,
-    to,
+    from: `"SUH Tech Website" <${smtpUser}>`,
+    to: contactReceiver,
     replyTo: email,
     subject: `New contact form message from ${name}`,
     text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,

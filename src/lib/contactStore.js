@@ -1,16 +1,17 @@
 import { Pool } from "pg";
+import { getContactConfig } from "./contactConfig";
 
 let pool;
 
 function getPool() {
-  const connectionString = process.env.DATABASE_URL?.trim();
-  if (!connectionString) {
+  const { databaseUrl } = getContactConfig();
+  if (!databaseUrl) {
     throw new Error("DATABASE_URL is not configured");
   }
 
   if (!pool) {
     pool = new Pool({
-      connectionString,
+      connectionString: databaseUrl,
       ssl: { rejectUnauthorized: false },
       max: 2,
     });
