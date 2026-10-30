@@ -224,7 +224,7 @@ const projectCatalog = {
     ],
 
     primaryCta: 'View Live Demo',
-    primaryLink: 'https://www.suhtech.in/',
+    primaryLink: 'https://skills-guru.vercel.app/',
   },
 
   // 🔴 DHANGANGA
