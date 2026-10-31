@@ -3,7 +3,7 @@
 import axios from "axios";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const officeLocations = [
   {
@@ -53,6 +53,7 @@ export default function ContactSection() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const isSubmittingRef = useRef(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,6 +62,8 @@ export default function ContactSection() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     setIsSubmitting(true);
     setSubmitStatus(null);
 
@@ -70,6 +73,12 @@ export default function ContactSection() {
       if (response.data.success) {
         setSubmitStatus({ type: "success", message: "Message sent successfully!" });
         setFormData({ name: "", email: "", message: "" });
+
+        // Meta Pixel Lead: only after the API confirms success. No parameters
+        // are sent, so no form data (name/email/message) reaches Meta.
+        try {
+          if (typeof window.fbq === "function") window.fbq("track", "Lead");
+        } catch {}
       }
     } catch (error) {
       setSubmitStatus({
@@ -77,6 +86,7 @@ export default function ContactSection() {
         message: error.response?.data?.error || "Failed to send message. Please try again.",
       });
     } finally {
+      isSubmittingRef.current = false;
       setIsSubmitting(false);
       setTimeout(() => setSubmitStatus(null), 5000);
     }
