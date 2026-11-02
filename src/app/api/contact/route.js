@@ -35,16 +35,24 @@ export async function POST(request) {
     const body = await request.json();
     const name = String(body?.name ?? "").trim();
     const email = String(body?.email ?? "").trim();
+    const phone = String(body?.phone ?? "").trim();
     const message = String(body?.message ?? "").trim();
 
-    if (!name || !email || !message) {
+    if (!name || !email || !phone || !message) {
       return NextResponse.json(
         { error: "All fields are required" },
         { status: 400, headers: corsHeaders() },
       );
     }
 
-    const payload = { name, email, message };
+    if (!/^\d{10}$/.test(phone)) {
+      return NextResponse.json(
+        { error: "Please enter a valid 10-digit phone number" },
+        { status: 400, headers: corsHeaders() },
+      );
+    }
+
+    const payload = { name, email, phone, message };
     const { backendApiUrl, databaseUrl, smtpUser, smtpPass } = getContactConfig();
     const errors = [];
     let contact = null;
@@ -109,6 +117,7 @@ export async function POST(request) {
               id: contact.id,
               name: contact.name,
               email: contact.email,
+              phone: contact.phone,
               message: contact.message,
               createdAt: contact.created_at || contact.createdAt,
             }

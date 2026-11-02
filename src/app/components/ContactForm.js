@@ -49,6 +49,7 @@ export default function ContactSection() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,22 +58,31 @@ export default function ContactSection() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    // Phone: digits only, exactly 10 digits
+    const next = name === "phone" ? value.replace(/\D/g, "").slice(0, 10) : value;
+    setFormData((prev) => ({ ...prev, [name]: next }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmittingRef.current) return;
     isSubmittingRef.current = true;
-    setIsSubmitting(true);
     setSubmitStatus(null);
+
+    if (!/^\d{10}$/.test(formData.phone)) {
+      setSubmitStatus({ type: "error", message: "Please enter a valid 10-digit phone number." });
+      isSubmittingRef.current = false;
+      setTimeout(() => setSubmitStatus(null), 5000);
+      return;
+    }
+    setIsSubmitting(true);
 
     try {
       const response = await axios.post("/api/contact", formData);
 
       if (response.data.success) {
         setSubmitStatus({ type: "success", message: "Message sent successfully!" });
-        setFormData({ name: "", email: "", message: "" });
+        setFormData({ name: "", email: "", phone: "", message: "" });
 
         // Meta Pixel Lead: only after the API confirms success. No parameters
         // are sent, so no form data (name/email/message) reaches Meta.
@@ -302,6 +312,35 @@ export default function ContactSection() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="xyz@mail.com"
+                    required
+                    className="
+                      w-full px-4 py-3 rounded-xl
+                      bg-purple-50/60 border border-purple-200 text-gray-900
+                      placeholder-gray-400
+                      focus:outline-none focus:ring-2 focus:ring-purple-500/40
+
+                      dark:bg-[#1A1F2E]/60 dark:border-white/10 dark:text-white
+                      dark:placeholder-gray-400
+                    "
+                  />
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="10-digit mobile number"
+                    inputMode="tel"
+                    maxLength={10}
+                    pattern="[0-9]{10}"
+                    title="Enter a 10-digit phone number"
+                    autoComplete="tel"
                     required
                     className="
                       w-full px-4 py-3 rounded-xl
