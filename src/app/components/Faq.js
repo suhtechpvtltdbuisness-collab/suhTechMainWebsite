@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, CheckCircle, Plus, Send } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 function FAQSection() {
   const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ function FAQSection() {
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
+  const isSubmittingRef = useRef(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,6 +23,8 @@ function FAQSection() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     setIsSubmitting(true);
     setSubmitError(null);
     setSubmitSuccess(false);
@@ -43,9 +46,16 @@ function FAQSection() {
       setSubmitSuccess(true);
       setFormData({ name: "", interest: "", favorite: "" });
       setTimeout(() => setSubmitSuccess(false), 5000);
+
+      // Meta Pixel Lead: only after the API confirms success. No parameters
+      // are sent, so no form data reaches Meta.
+      try {
+        if (typeof window.fbq === "function") window.fbq("track", "Lead");
+      } catch {}
     } catch (error) {
       setSubmitError(error.message);
     } finally {
+      isSubmittingRef.current = false;
       setIsSubmitting(false);
     }
   };
