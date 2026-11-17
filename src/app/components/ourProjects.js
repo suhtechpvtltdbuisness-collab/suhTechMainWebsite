@@ -66,26 +66,32 @@ const ourProjects = [
     image: '/images/himalaya.png',
     slug: 'himalayan-ecommerce-platform',
   },
+  {
+    title: 'Vellora – Next-Gen Dating & Social Discovery Platform',
+    subtitle:
+      'Safe, verified, and modern matchmaking app with mandatory selfie verification, real-time messaging, and robust privacy controls.',
+    image: '/images/vellora.png',
+    slug: 'vellora-dating-app',
+  },
 ];
 
 const ScrollingMockup = ({ image, title }) => {
   return (
     <div
-      className='relative w-full overflow-hidden border-[6px] border-black rounded-[24px] shadow-[0_25px_24.2px_14px_rgba(0,0,0,0.25)] bg-white dark:bg-gray-800'
+      className='relative w-full overflow-hidden border-[6px] border-black rounded-[24px] shadow-[0_25px_24.2px_14px_rgba(0,0,0,0.25)] bg-slate-950 dark:bg-black'
       style={{ aspectRatio: '495 / 363' }}
     >
       <motion.div
-        className='absolute top-0 left-0 w-full'
-        initial={{ y: 0 }}
-        whileHover={{ y: '-70%' }}
-        transition={{ duration: 10, ease: 'linear' }}
+        className='relative w-full h-full'
+        whileHover={{ scale: 1.04 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <Image
           src={image}
           alt={title}
-          width={495}
-          height={3634}
-          className='w-full h-auto object-top'
+          fill
+          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          className='object-cover object-top'
           priority
         />
       </motion.div>

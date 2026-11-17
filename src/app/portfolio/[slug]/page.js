@@ -404,6 +404,54 @@ const projectCatalog = {
     primaryCta: 'View Live Website',
     primaryLink: 'https://ecommer-store-puce.vercel.app/',
   },
+
+  // 💖 VELLORA
+  'vellora-dating-app': {
+    title: 'Vellora – Next-Gen Dating & Social Discovery Platform',
+    description:
+      'Vellora is a safety-first mobile dating and social discovery platform designed to help users forge authentic, meaningful connections with confidence. Built with mandatory selfie verification, encrypted real-time chat, smart distance and interest filters, and proactive safety controls, Vellora redefines online dating by eliminating fake profiles, catfishing, and unsolicited harassment.',
+
+    heroImage: '/images/vellora.png',
+    heroBg: 'linear-gradient(135deg, #fce7f3 0%, #ede9fe 100%)',
+    imageFit: 'cover',
+
+    challenge: {
+      title: 'Challenge',
+      description:
+        'Building a modern dating experience that addresses deep-rooted user anxieties around safety, privacy, and identity fraud while keeping onboarding frictionless and social discovery delightful.',
+      points: [
+        'Preventing fake profiles, bots, and catfishing through robust identity verification',
+        'Protecting user privacy, personal data, and location boundaries',
+        'Delivering low-latency, real-time messaging with instant push notifications',
+        'Designing an engaging, fluid UI optimized for discovery gestures and swipe interactions',
+        'Creating discreet, one-tap safety mechanisms for reporting and blocking abusive behavior',
+      ],
+    },
+
+    solution: {
+      title: 'Solution Provided By SUH Tech',
+      description:
+        'SUH Tech engineered an end-to-end mobile and web dating platform prioritizing trust, security, and effortless user connection.',
+      points: [
+        'Mandatory Selfie & Photo Verification ensuring only genuine, authenticated members',
+        'Smart Discovery Engine with fine-grained age, distance radius, and lifestyle preference filters',
+        'Secure Real-Time Messaging with mutual-match gating, media sharing, and typing indicators',
+        'Comprehensive Safety Suite featuring 1-tap reporting, discreet blocking, and account visibility controls',
+        'Fluid, Responsive Cross-Platform Interface crafted for seamless navigation and smooth micro-animations',
+        'High-Performance Cloud Architecture ensuring top-tier data encryption, sub-second latency, and 99.9% uptime',
+      ],
+    },
+
+    impact: [
+      { value: '99.8%', description: 'Profile Verification & Authenticity Rate' },
+      { value: '40%', description: 'Increase in Meaningful Conversations & Matches' },
+      { value: '50%', description: 'Reduction in Spam, Bots & Harassment Incidents' },
+      { value: '35%', description: 'Growth in Daily Active User Engagement' },
+    ],
+
+    primaryCta: 'View Live Website',
+    primaryLink: 'https://vellora.my/',
+  },
 };
 
 async function PortfolioDetailPage({ params }) {
