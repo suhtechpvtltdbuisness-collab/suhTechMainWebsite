@@ -452,6 +452,54 @@ const projectCatalog = {
     primaryCta: 'View Live Website',
     primaryLink: 'https://vellora.my/',
   },
+
+  // 🚗 AUTOROMA
+  'autoroma-car-perfume-store': {
+    title: 'Autoroma – Luxury Car Perfume E-Commerce Store',
+    description:
+      'Autoroma Is A Premium Car Fragrance Brand Built Around The Idea Of "Drive Luxury, Breathe Elegance." We Designed And Developed An Immersive E-Commerce Website That Presents Its Perfume Collection With A Dark, Cinematic Look, Interactive 3D Product Visuals, And A Smooth Path From Discovery To Purchase.',
+
+    heroImage: '/images/autoroma.png',
+    heroBg: '#0A0A0A',
+    imageFit: 'cover',
+
+    challenge: {
+      title: 'Challenge',
+      description:
+        'Fragrance Is Hard To Sell Online Because Customers Cannot Smell It. The Brand Needed A Digital Experience That Conveys Luxury, Emotion, And Trust Through Visuals Alone.',
+      points: [
+        'Communicating A Premium Brand Feel Without Physical Product Experience',
+        'Showcasing Bottle Design, Labels, And Fragrance Notes Clearly',
+        'Standing Out In A Crowded Car Accessories Market',
+        'Keeping A Rich Visual Style Fast And Smooth On Mobile Devices',
+        'Guiding Visitors From Browsing To Checkout With Minimal Friction',
+      ],
+    },
+
+    solution: {
+      title: 'Solution Provided By SUH Tech',
+      description:
+        'We Built An Elegant, Performance-Focused Storefront That Pairs A Luxury Visual Identity With A Simple And Reliable Shopping Flow.',
+      points: [
+        'Dark, Gold-Accented Design Language That Reflects Automotive Luxury',
+        'Interactive 3D Product Hero To Showcase The Perfume Bottle From Every Angle',
+        'Structured Collection Pages With Fragrance Notes And Product Details',
+        'Brand Story Section Highlighting Craftsmanship And Quality',
+        'Cart, User Account, And Secure Checkout For A Seamless Purchase Journey',
+        'Fully Responsive Layout Optimized For Speed Across All Devices',
+      ],
+    },
+
+    impact: [
+      { value: '40%', description: 'Higher Visitor Engagement On Product Pages' },
+      { value: '30%', description: 'Increase In Add-To-Cart Actions' },
+      { value: '25%', description: 'Improvement In Perceived Brand Value' },
+      { value: '35%', description: 'Faster Page Load On Mobile Devices' },
+    ],
+
+    primaryCta: 'View Live Website',
+    primaryLink: 'https://www.autoroma.in/',
+  },
 };
 
 async function PortfolioDetailPage({ params }) {

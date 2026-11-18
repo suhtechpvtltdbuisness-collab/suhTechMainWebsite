@@ -73,9 +73,33 @@ const ourProjects = [
     image: '/images/vellora.png',
     slug: 'vellora-dating-app',
   },
+  {
+    title: 'Autoroma – Luxury Car Perfume Store',
+    subtitle:
+      'A premium e-commerce experience for a luxury car fragrance brand — crafted for every drive.',
+    image: '/images/autoroma.png',
+    fill: true,
+    slug: 'autoroma-car-perfume-store',
+  },
 ];
 
-const ScrollingMockup = ({ image, title }) => {
+const ScrollingMockup = ({ image, title, fill }) => {
+  if (fill) {
+    return (
+      <div
+        className='relative w-full overflow-hidden border-[6px] border-black rounded-[24px] shadow-[0_25px_24.2px_14px_rgba(0,0,0,0.25)] bg-black'
+        style={{ aspectRatio: '495 / 363' }}
+      >
+        <Image
+          src={image}
+          alt={title}
+          fill
+          sizes='(max-width: 768px) 100vw, 33vw'
+          className='object-cover object-center'
+        />
+      </div>
+    );
+  }
   return (
     <div
       className='relative w-full overflow-hidden border-[6px] border-black rounded-[24px] shadow-[0_25px_24.2px_14px_rgba(0,0,0,0.25)] bg-slate-950 dark:bg-black'
@@ -151,7 +175,11 @@ export default function OurProjectsSection() {
               onClick={() => router.push(`/portfolio/${study.slug}`)}
             >
               <div className='p-4'>
-                <ScrollingMockup image={study.image} title={study.title} />
+                <ScrollingMockup
+                  image={study.image}
+                  title={study.title}
+                  fill={study.fill}
+                />
               </div>
 
               <div className='p-6 bg-white dark:bg-gray-50/0'>
