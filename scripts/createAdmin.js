@@ -64,7 +64,3 @@ async function createAdmin() {
 }
 
 createAdmin();
-
-
-
-// ÷÷÷

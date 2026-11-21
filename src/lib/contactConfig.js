@@ -14,7 +14,8 @@ export function getContactConfig() {
   const backendApiUrl = (
     process.env.BACKEND_API_URL ||
     process.env.NEXT_PUBLIC_BACKEND_API_URL ||
-    "https://suh-tech-main-backend-three.vercel.app"
+    "https://www.suhtech.top"
+    // "https://suh-tech-main-backend-three.vercel.app"
   )
     .trim()
     .replace(/\/$/, "");
