@@ -32,7 +32,7 @@ function acknowledgmentContent(name, message) {
     "",
     message,
     "",
-    "If your request is urgent, please reply to this email or reach us at info@suhtech.top / +91 81789 39033.",
+    "If your request is urgent, please reply to this email or reach us at reply@suhtech.in / +91 81789 39033.",
     "",
     "Warm regards,",
     "SUH Tech Private Limited",
@@ -49,7 +49,7 @@ function acknowledgmentContent(name, message) {
         ${escapeHtml(message).replace(/\n/g, "<br/>")}
       </blockquote>
       <p style="margin-top:24px;">If your request is urgent, please reply to this email or reach us at
-        <a href="mailto:info@suhtech.top">info@suhtech.top</a> / +91 81789 39033.</p>
+        <a href="mailto:reply@suhtech.in">reply@suhtech.in</a> / +91 81789 39033.</p>
       <p style="margin-top:28px;">
         Warm regards,<br/>
         <strong>SUH Tech Private Limited</strong><br/>

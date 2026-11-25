@@ -191,10 +191,10 @@ export default function ContactSection() {
                   Email Support
                 </h4>
                 <a
-                  href="mailto:info@suhtech.top"
+                  href="mailto:reply@suhtech.in"
                   className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer text-sm lg:text-base break-all"
                 >
-                  info@suhtech.top
+                  reply@suhtech.in
                 </a>
               </div>
             </div>

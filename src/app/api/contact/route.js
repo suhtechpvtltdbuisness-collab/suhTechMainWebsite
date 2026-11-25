@@ -101,7 +101,7 @@ export async function POST(request) {
       return NextResponse.json(
         {
           error:
-            "Could not submit your message right now. Please email info@suhtech.top.",
+            "Could not submit your message right now. Please email reply@suhtech.in.",
           details: errors,
         },
         { status: 500, headers: corsHeaders() },

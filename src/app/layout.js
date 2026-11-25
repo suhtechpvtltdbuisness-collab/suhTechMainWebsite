@@ -234,7 +234,7 @@ export default function RootLayout({ children }) {
       "@type": "ContactPoint",
       "telephone": "+91-8178939033",
       "contactType": "Customer Service",
-      "email": "info@suhtech.top"
+      "email": "reply@suhtech.in"
     },
     "sameAs": [
       "https://www.linkedin.com/company/suhtech",
